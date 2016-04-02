@@ -1,8 +1,8 @@
-package texteditor;
+package client.texteditor;
 
 import com.apple.eawt.Application;
-import listeners.MenuItemListener;
-import resources.Constants;
+import client.listeners.MenuItemListener;
+import client.utilities.Constants;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
 import uielements.FlatTabbedPaneUI;

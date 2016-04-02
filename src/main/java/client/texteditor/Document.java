@@ -1,12 +1,12 @@
-package texteditor;
+package client.texteditor;
 
-import listeners.MenuItemListener;
+import client.listeners.MenuItemListener;
+import spellchecker.SpellCheckManager;
+import spellchecker.StringTuple;
 import uielements.ColorSet;
 import uielements.ConfigurePanel;
 import uielements.FlatScrollBarUI;
 import uielements.SpellCheckPanel;
-import spellchecker.SpellCheckManager;
-import spellchecker.StringTuple;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -57,18 +57,18 @@ public class Document extends JPanel {
         configurePanelActive = spellCheckPanelActive = false;
 
         scrollPane = new JScrollPane();
-        scrollPane.getVerticalScrollBar().setUI(new FlatScrollBarUI());
 
         textArea = new JTextArea();
         spellCheckPanel = new SpellCheckPanel();
         configurePanel = new ConfigurePanel();
         undoManager = new UndoManager();
         listeners = new ArrayList<MenuItemListener>();
+
+        scrollPane.getVerticalScrollBar().setUI(new FlatScrollBarUI());
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         textArea.setSelectionColor(ColorSet.HOVER_COLOR);
         textArea.setLineWrap(true);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         textArea.setMargin(new Insets(10,10,10,10) );
-
 
     }
 

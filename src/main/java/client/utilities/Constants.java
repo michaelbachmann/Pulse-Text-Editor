@@ -1,4 +1,4 @@
-package resources;
+package client.utilities;
 
 /**
  * Created by Michael on 3/28/16.
