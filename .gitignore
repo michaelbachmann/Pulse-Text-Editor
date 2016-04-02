@@ -23,6 +23,8 @@ Icon
 .AppleDesktop
 Network Trash Folder
 Temporary Items
+/src/main/java/resources/ChatMessage.java
+/src/main/java/server/ChatClient.java
 .apdisk
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
