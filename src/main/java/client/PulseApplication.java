@@ -1,7 +1,7 @@
-package client.texteditor;
+package client;
 
 import com.apple.eawt.Application;
-import client.listeners.MenuItemListener;
+import resources.Document;
 import uielements.Constantsssss;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;

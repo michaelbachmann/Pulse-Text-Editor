@@ -1,6 +1,6 @@
-package client.texteditor;
+package resources;
 
-import client.listeners.MenuItemListener;
+import client.MenuItemListener;
 import spellchecker.SpellCheckManager;
 import spellchecker.StringTuple;
 import uielements.ColorSet;
@@ -40,8 +40,9 @@ public class Document extends JPanel {
 
     private Queue<StringTuple> misspelledQueue;
     private ArrayList<String> suggestionList;
-    private ArrayList<MenuItemListener> listeners;
 
+
+    private ArrayList<MenuItemListener> listeners;
     // Delegate: Adds a listener to our list
     public void addListener(MenuItemListener toAdd) { listeners.add(toAdd); }
     // Delegate: Event that tells our menu items to update
@@ -55,7 +56,6 @@ public class Document extends JPanel {
     public void setUp() {
         indexStart = indexEnd = 0;
         configurePanelActive = spellCheckPanelActive = false;
-
         scrollPane = new JScrollPane();
 
         textArea = new JTextArea();
@@ -69,6 +69,8 @@ public class Document extends JPanel {
         textArea.setSelectionColor(ColorSet.HOVER_COLOR);
         textArea.setLineWrap(true);
         textArea.setMargin(new Insets(10,10,10,10) );
+//        textArea.setBackground(ColorSet.EDITOR_BG_COLOR);
+//        textArea.setForeground(ColorSet.EDITOR_FONT_COLOR);
 
     }
 

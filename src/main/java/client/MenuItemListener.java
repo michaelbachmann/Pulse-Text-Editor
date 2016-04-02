@@ -1,4 +1,4 @@
-package client.listeners;
+package client;
 
 /**
  * Created by Michael on 2/29/16.

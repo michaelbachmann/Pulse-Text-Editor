@@ -10,4 +10,11 @@ public class ColorSet {
     public static final Color TURQUOISE = new Color(25,189,157);
     public static final Color EDGE_COLOR = new Color(0,155,129);
     public static final Color HOVER_COLOR = new Color(159,222,193);
+
+
+
+
+    public static final Color EDITOR_BG_COLOR = DARKER_BLUE;
+    public static final Color EDITOR_FONT_COLOR = BEIGE;
 }
+

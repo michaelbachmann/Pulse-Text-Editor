@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
  * Port would be the String Key String Num
  * Type conversion not added yet
  */
-final class ConfigureSettings {
+final public class ConfigureSettings {
     // Create only in Constructor
     private static final ConfigureSettings mInstance;
 
