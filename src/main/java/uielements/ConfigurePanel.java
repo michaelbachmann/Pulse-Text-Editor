@@ -1,5 +1,7 @@
 package uielements;
 
+import uielements.componentuis.FlatButtonUI;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;

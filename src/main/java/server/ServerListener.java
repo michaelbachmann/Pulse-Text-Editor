@@ -1,7 +1,7 @@
 package server;
 
 
-import resource.ChatMessage;
+import resources.ChatMessage;
 
 import java.io.IOException;
 import java.net.BindException;

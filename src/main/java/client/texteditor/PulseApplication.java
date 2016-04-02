@@ -2,10 +2,11 @@ package client.texteditor;
 
 import com.apple.eawt.Application;
 import client.listeners.MenuItemListener;
-import client.utilities.Constants;
+import uielements.Constantsssss;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
-import uielements.FlatTabbedPaneUI;
+import uielements.componentuis.FlatButtonUI;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -51,14 +52,14 @@ public class PulseApplication extends JFrame {
         // Try to set the application icon for os x
         try {
             Application application = Application.getApplication();
-            ImageIcon icon_image = new ImageIcon(Constants.PULSE_ICON);
+            ImageIcon icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
             Image dock_image = icon_image.getImage();
             background = new BackgroundPanel(dock_image);
             background.setVisible(true);
             setContentPane(background);
             application.setDockIconImage(dock_image);
             setIconImage(icon_image.getImage());  // set for other OS's
-            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constants.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
+            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constantsssss.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
         } catch (Exception e) {
             e.getMessage();
         }
@@ -70,7 +71,7 @@ public class PulseApplication extends JFrame {
         try {
             // All credit for this font goes to the original owner
             // http://www.1001fonts.com/open-sans-font.html#license
-            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constants.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
+            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constantsssss.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
             GraphicsEnvironment gc = GraphicsEnvironment.getLocalGraphicsEnvironment();
             gc.registerFont(myFont);
             setUIFont(myFont);
@@ -99,18 +100,18 @@ public class PulseApplication extends JFrame {
 
     private void setupIcons() {
         //All credit goes to http://somerandomdude.com/work/sanscons/
-        newIcon = new ImageIcon(Constants.ICON_NEW);
-        openIcon = new ImageIcon(Constants.ICON_OPEN);
-        saveIcon = new ImageIcon(Constants.ICON_SAVE);
-        closeIcon = new ImageIcon(Constants.ICON_CLOSE);
-        copyIcon = new ImageIcon(Constants.ICON_COPY);
-        pasteIcon = new ImageIcon(Constants.ICON_PASTE);
-        scIcon = new ImageIcon(Constants.ICON_SPELLCHECK);
-        configIcon = new ImageIcon(Constants.ICON_CONFIG);
-        cutIcon = new ImageIcon(Constants.ICON_CUT);
-        redoIcon = new ImageIcon(Constants.ICON_REDO);
-        undoIcon = new ImageIcon(Constants.ICON_UNDO);
-        selectAllIcon = new ImageIcon(Constants.ICON_SELECTALL);
+        newIcon = new ImageIcon(Constantsssss.ICON_NEW);
+        openIcon = new ImageIcon(Constantsssss.ICON_OPEN);
+        saveIcon = new ImageIcon(Constantsssss.ICON_SAVE);
+        closeIcon = new ImageIcon(Constantsssss.ICON_CLOSE);
+        copyIcon = new ImageIcon(Constantsssss.ICON_COPY);
+        pasteIcon = new ImageIcon(Constantsssss.ICON_PASTE);
+        scIcon = new ImageIcon(Constantsssss.ICON_SPELLCHECK);
+        configIcon = new ImageIcon(Constantsssss.ICON_CONFIG);
+        cutIcon = new ImageIcon(Constantsssss.ICON_CUT);
+        redoIcon = new ImageIcon(Constantsssss.ICON_REDO);
+        undoIcon = new ImageIcon(Constantsssss.ICON_UNDO);
+        selectAllIcon = new ImageIcon(Constantsssss.ICON_SELECTALL);
     }
 
     // Instantiate components
@@ -124,7 +125,7 @@ public class PulseApplication extends JFrame {
             @Override
             public void paintComponent(Graphics g) {
                 Dimension size = this.getSize();
-                g.drawImage(Toolkit.getDefaultToolkit().getImage(Constants.MENU_BAR_IMG),0,0, size.width, size.height, this);
+                g.drawImage(Toolkit.getDefaultToolkit().getImage(Constantsssss.MENU_BAR_IMG),0,0, size.width, size.height, this);
             }
         };
         fileMenu = new JMenu("File") {
@@ -171,7 +172,7 @@ public class PulseApplication extends JFrame {
                 selectAllMI,scRunMI,scConfigureMI));
 
         tabbedEditorPane = new JTabbedPane();
-        tabbedEditorPane.setUI(new FlatTabbedPaneUI());
+        tabbedEditorPane.setUI(new FlatButtonUI.FlatTabbedPaneUI());
     }
 
     private void createGUI() {

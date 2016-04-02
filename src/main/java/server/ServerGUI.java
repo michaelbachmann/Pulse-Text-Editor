@@ -1,8 +1,7 @@
 package server;
 
 import uielements.ColorSet;
-import uielements.FlatButtonUI;
-import uielements.FlatScrollBarUI;
+import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +31,7 @@ public class ServerGUI extends JFrame {
 
     public void createGUI() {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getVerticalScrollBar().setUI(new FlatScrollBarUI());
+        scrollPane.getVerticalScrollBar().setUI(new FlatButtonUI.FlatScrollBarUI());
         scrollPane.getViewport().add(log);
         log.setSelectionColor(ColorSet.HOVER_COLOR);
         log.setBackground(ColorSet.DARKER_BLUE);

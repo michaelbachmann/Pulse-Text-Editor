@@ -1,9 +1,9 @@
-package client.utilities;
+package uielements;
 
 /**
  * Created by Michael on 3/28/16.
  */
-public class Constants {
+public class Constantsssss {
     // App Icons
     public static final String PULSE_ICON = "resources/img/pulseIcon.png";
     public static final String CURSOR_ICON = "resources/img/cursor_test.png";

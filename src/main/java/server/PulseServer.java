@@ -1,7 +1,7 @@
 package server;
 
 
-import resource.ChatMessage;
+import resources.ChatMessage;
 import utilities.ConfigureSettings;
 
 import java.awt.event.ActionEvent;

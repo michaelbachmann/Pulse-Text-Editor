@@ -1,4 +1,6 @@
-package uielements;
+package uielements.jcomponents;
+
+import uielements.ColorSet;
 
 import javax.swing.border.AbstractBorder;
 import java.awt.*;

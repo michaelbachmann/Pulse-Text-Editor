@@ -1,4 +1,7 @@
-package uielements;
+package uielements.jcomponents;
+
+import uielements.ColorSet;
+import uielements.componentuis.FlatComboBoxScrollUI;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboPopup;

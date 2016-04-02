@@ -1,11 +1,11 @@
 package server;
 
-import resource.ChatMessage;
+import resources.ChatMessage;
 
 import java.io.*;
 import java.net.Socket;
 
-
+// Thread that that manages connection with user
 public class ServerClientCommunicator extends Thread {
     private Socket socket;
     private ObjectOutputStream oos;

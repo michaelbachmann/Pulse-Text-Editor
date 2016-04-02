@@ -46670,7 +46670,7 @@ resorcin
 resorted
 resorter
 resounds
-resource
+resources
 resowing
 respects
 respells

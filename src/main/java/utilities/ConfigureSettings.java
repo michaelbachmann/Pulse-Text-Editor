@@ -8,12 +8,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-/**
- * Created by Michael on 4/1/16.
+/***************************
+ *   CONFIGURE SETTINGS    *
+ ***************************
+ * Syntax for config parser
+ *--------------------------
+ * It works based on key value pairs and will trim whitespace and ignore blank lines.
+ *
+ * # = Comment Escape
+ * | = Delimiter
+ *
+ * Example: Port|8080
+ * Port would be the String Key String Num
+ * Type conversion not added yet
  */
-public class ConfigureSettings {
+final class ConfigureSettings {
+    // Create only in Constructor
+    private static final ConfigureSettings mInstance;
 
-    //
+    // Static Initializer
+    static { mInstance = new ConfigureSettings(); }
+
+    // Returns key (type) value (config param),
     public static Map<String, String> getSetings(String file) {
         Map<String, String> settings = new HashMap<>();
         BufferedReader br = null;
@@ -63,4 +79,7 @@ public class ConfigureSettings {
         }
         return settings;
     }
+
+    // Singleton ensures only one exists
+    private ConfigureSettings() {}
 }

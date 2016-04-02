@@ -5,8 +5,8 @@ import spellchecker.SpellCheckManager;
 import spellchecker.StringTuple;
 import uielements.ColorSet;
 import uielements.ConfigurePanel;
-import uielements.FlatScrollBarUI;
 import uielements.SpellCheckPanel;
+import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -64,7 +64,7 @@ public class Document extends JPanel {
         undoManager = new UndoManager();
         listeners = new ArrayList<MenuItemListener>();
 
-        scrollPane.getVerticalScrollBar().setUI(new FlatScrollBarUI());
+        scrollPane.getVerticalScrollBar().setUI(new FlatButtonUI.FlatScrollBarUI());
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         textArea.setSelectionColor(ColorSet.HOVER_COLOR);
         textArea.setLineWrap(true);

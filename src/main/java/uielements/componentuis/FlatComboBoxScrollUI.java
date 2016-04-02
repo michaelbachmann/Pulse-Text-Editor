@@ -1,4 +1,6 @@
-package uielements;
+package uielements.componentuis;
+
+import uielements.ColorSet;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;

@@ -1,5 +1,7 @@
 package uielements;
 
+import uielements.componentuis.FlatButtonUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -69,7 +71,7 @@ public class SpellCheckPanel extends JPanel {
         change =  new JButton("Change");
         close = new JButton("Close");
         comboBox = new JComboBox<String>();
-        comboBox.setUI(new FlatComboBoxUI());
+        comboBox.setUI(new FlatButtonUI.FlatComboBoxUI());
 
         spelling.setForeground(ColorSet.DARKBLUE);
         spelling.setFont(labelFont);
