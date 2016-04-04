@@ -3,8 +3,8 @@ package resources;
 import spellchecker.SpellCheckManager;
 import spellchecker.StringTuple;
 import uielements.ColorSet;
-import uielements.ConfigurePanel;
-import uielements.SpellCheckPanel;
+import client.Views.ConfigurePanel;
+import client.Views.SpellCheckPanel;
 import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;

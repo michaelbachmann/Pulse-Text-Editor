@@ -1,5 +1,10 @@
 package client;
 
+import client.Views.EditorPanel;
+import client.Views.LoginPanel;
+import client.Views.RegisterPanel;
+import client.Views.SplashPanel;
+import resources.Verify;
 import com.apple.eawt.Application;
 import resources.Document;
 import spellchecker.SpellCheckManager;
@@ -26,33 +31,30 @@ public class ClientGUI extends JFrame {
     private JMenu fileMenu, editMenu, spellCheckMenu;
     private JMenuItem newMI, openMI, saveMI, closeMI, undoMI, redoMI, cutMI, copyMI, pasteMI, selectAllMI, scRunMI, scConfigureMI;
     private List<JMenuItem> menuList;
+    private CardLayout cardLayout;
 //    private JTabbedPane tabbedEditorPane;
     private SpellCheckManager scm;
 //    private UndoManager currentManager;
     // Delegate: Class to manage events between editor and documents
 //    private MenuItemDelegate delegate = new MenuItemDelegate(this);
     private ImageIcon newIcon, openIcon, saveIcon, closeIcon, copyIcon, pasteIcon, selectAllIcon, scIcon, configIcon, cutIcon, redoIcon, undoIcon;
-    private SplashPanel backgroundPanel;
+    private SplashPanel splashPanel;
     private EditorPanel editorPanel;
-    private Map<String,JMenuItem> menuItems;
+    private LoginPanel loginPanel;
+    private RegisterPanel registerPanel;
     private JPanel viewController;
 
     // MARK: Constructor
     public ClientGUI () {
         super("Pulse");
-//        menuItems = new HashMap<>();
         instantiateComponents();
         createGUI();
         addActions();
         setupOSXIcon();
         setupFont();
-        editorPanel = new EditorPanel(undoMI, redoMI);
-        viewController = new JPanel(new CardLayout());
-        viewController.add("Editor", editorPanel);
-        CardLayout cardLayout = (CardLayout) viewController.getLayout();
-        cardLayout.show(viewController, "Editor");
-        setContentPane(viewController);
-
+        cardLayout.show(viewController, "Splash");
+        add(viewController);
+        menuBar.setVisible(false);
         this.setVisible(true);
     }
 
@@ -74,12 +76,18 @@ public class ClientGUI extends JFrame {
 
     // Instantiate components
     private void instantiateComponents () {
+        // View's and Controller
+        editorPanel = new EditorPanel(undoMI, redoMI);
+        loginPanel = new LoginPanel();
+        splashPanel = new SplashPanel();
+        registerPanel = new RegisterPanel();
+        cardLayout = new CardLayout();
+        viewController = new JPanel(cardLayout);
         // SpellChecker
         scm = new SpellCheckManager();
-//        pulseMenuBar = new PulseMenuBar();
         // Setup All Icons
         setupIcons();
-//         Menu Bar Setup
+        // Menu Bar Setup
         menuBar = new JMenuBar() {
             @Override
             public void paintComponent(Graphics g) {
@@ -112,7 +120,7 @@ public class ClientGUI extends JFrame {
             }
         };
 
-//         Menu Items
+        // Menu Items
         newMI = new JMenuItem("New", newIcon);
         openMI = new JMenuItem("Open", openIcon);
         saveMI = new JMenuItem("Save", saveIcon);
@@ -129,13 +137,6 @@ public class ClientGUI extends JFrame {
         menuList.addAll(Arrays.asList(newMI,openMI,saveMI,closeMI,
                 undoMI,redoMI,cutMI,copyMI,pasteMI,
                 selectAllMI,scRunMI,scConfigureMI));
-//         add to map
-//        for (JMenuItem item: menuList) {
-//            menuItems.put(item.getText(), item);
-//        }
-
-//        tabbedEditorPane = new JTabbedPane();
-//        tabbedEditorPane.setUI(new FlatButtonUI.FlatTabbedPaneUI());
     }
 
     private void createGUI() {
@@ -160,8 +161,11 @@ public class ClientGUI extends JFrame {
         tabOpen(false);
         undoMI.setEnabled(false);
         redoMI.setEnabled(false);
-//        add(tabbedEditorPane);
         setUpMenuLook();
+        viewController.add("Login", loginPanel);
+        viewController.add("Register", registerPanel);
+        viewController.add("Splash", splashPanel);
+        viewController.add("Editor", editorPanel);
     }
 
     // Setup JMenuItems
@@ -253,11 +257,6 @@ public class ClientGUI extends JFrame {
         });
         closeMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                // getSelectedIndex returns -1 if there are no tabs
-//                if (tabbedEditorPane.getTabCount() >= 0)
-//                    tabbedEditorPane.remove(tabbedEditorPane.getSelectedComponent());
-//                if (tabbedEditorPane.getTabCount() == 0)
-//                    allowItemsSelectable(false);
                 if (editorPanel.closeTab() == -1)
                     tabOpen(false);
             }
@@ -265,12 +264,6 @@ public class ClientGUI extends JFrame {
         saveMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.saveTab();
-                // getSelectedIndex returns -1 if there are no tabs
-                // Call Document save method to write the file and change the tab name
-//                if (tabbedEditorPane.getSelectedIndex() >= 0) {
-//                    ((Document) tabbedEditorPane.getSelectedComponent()).save();
-//                    tabbedEditorPane.setTitleAt(tabbedEditorPane.getSelectedIndex(), ((Document) tabbedEditorPane.getSelectedComponent()).getName());
-//                }
             }
         });
         selectAllMI.addActionListener(new ActionListener() {
@@ -281,34 +274,26 @@ public class ClientGUI extends JFrame {
         cutMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.cut();
-//                ((Document) tabbedEditorPane.getSelectedComponent()).cut();
             }
         });
         copyMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.copy();
-//                ((Document) tabbedEditorPane.getSelectedComponent()).copy();
             }
         });
         pasteMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.paste();
-//                ((Document) tabbedEditorPane.getSelectedComponent()).paste();
             }
         });
         scRunMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.runSpellCheck();
-//                tabbedEditorPane.requestFocus();
-//                ((Document) tabbedEditorPane.getSelectedComponent()).runSC();
             }
         });
         scConfigureMI.addActionListener(new ActionListener() {
-//            editorPanel.
             public void actionPerformed(ActionEvent ge) {
                 editorPanel.runConfigure();
-//                tabbedEditorPane.requestFocus();
-//                ((Document) tabbedEditorPane.getSelectedComponent()).runConfigure();
             }
         });
         undoMI.addActionListener(new ActionListener() {
@@ -335,6 +320,57 @@ public class ClientGUI extends JFrame {
 //                updateMI();
             }
         });
+
+        // Card Layout Transitions
+        splashPanel.getOffline().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(viewController, "Editor");
+                menuBar.setVisible(true);
+            }
+        });
+        splashPanel.getLogin().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(viewController, "Login");
+
+            }
+        });
+        splashPanel.getRegister().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(viewController, "Register");
+            }
+        });
+        registerPanel.getLogin().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!Verify.validSignUp(registerPanel.getUsernameField().getText(), registerPanel.getPasswordField().getText()))
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Password must contain at least: 1-Number and 1-Uppercase Letter",
+                            "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
+                else if (!Verify.passMatch(registerPanel.getPasswordField().getText(), registerPanel.getRepeatField().getText())){
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Password's do not match!",
+                            "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    cardLayout.show(viewController, "Editor");
+                    menuBar.setVisible(true);
+                }
+            }
+        });
+        loginPanel.getLogin().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!Verify.validSignUp(registerPanel.getUsernameField().getText(), registerPanel.getPasswordField().getText())) {
+                    JOptionPane.showMessageDialog(ClientGUI.this, "Password must contain at least: 1-Number and 1-Uppercase Letter",
+                            "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
+               } else {
+                    cardLayout.show(viewController, "Editor");
+                    menuBar.setVisible(true);
+                }
+            }
+        });
+
+
     }
 
 
@@ -388,9 +424,6 @@ public class ClientGUI extends JFrame {
             Application application = Application.getApplication();
             ImageIcon icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
             Image dock_image = icon_image.getImage();
-//            backgroundPanel = new SplashPanel(dock_image);
-//            backgroundPanel.setVisible(true);
-//            setContentPane(backgroundPanel);
             application.setDockIconImage(dock_image);
             setIconImage(icon_image.getImage());  // set for other OS's
             setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constantsssss.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));

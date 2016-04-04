@@ -63,7 +63,7 @@ final public class ConfigureSettings {
             line = line.trim();
             if (line.startsWith("#")) {// ignore line since it is a comment
                 System.out.println(line);
-            } else if (line.startsWith(server.Constants.PORT_LABEL_STRING)) {
+            } else if (line.startsWith(Constants.PORT_STRING) || line.startsWith(Constants.HOST_STRING)) {
                 System.out.println(line);
                 st = new StringTokenizer(line, server.Constants.CONFIG_FILE_DELIMITER);
                 key = st.nextToken();
@@ -80,6 +80,26 @@ final public class ConfigureSettings {
         return settings;
     }
 
+    // Grabs the port from the config file
+    public static int readPort(Map<String,String> settings) {
+//        Map<String, String> settings = ConfigureSettings.getSetings(server.Constants.CONFIG_FILE);
+        if (settings.containsKey(server.Constants.PORT_LABEL_STRING)) {
+            try {
+                int port = Integer.parseInt(settings.get(server.Constants.PORT_LABEL_STRING));
+                System.out.println("Listening on port: " + port);
+                return port;
+            } catch (NumberFormatException nfe) {
+                System.out.println(nfe.getMessage());
+                System.out.println("Invalid Port: " + settings.get(server.Constants.PORT_LABEL_STRING));
+                System.out.println("Please check the configuration file and try restarting the server.");
+                System.exit(1);
+            }
+        }
+        return -1;
+    }
     // Singleton ensures only one exists
     private ConfigureSettings() {}
 }
+
+
+

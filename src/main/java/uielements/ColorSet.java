@@ -14,7 +14,7 @@ public class ColorSet {
 
 
 
-    public static final Color EDITOR_BG_COLOR = DARKER_BLUE;
+    public static final Color EDITOR_BG_COLOR = new Color(233,233,233);
     public static final Color EDITOR_FONT_COLOR = BEIGE;
 }
 

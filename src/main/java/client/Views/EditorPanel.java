@@ -1,4 +1,4 @@
-package client;
+package client.Views;
 
 import resources.Document;
 import spellchecker.SpellCheckManager;
@@ -20,10 +20,10 @@ public class EditorPanel extends JPanel {
 //    private Map<String,JMenuItem> menuItemMap;
 
 //     Manage when undo and redo are available
-    public void updateMI(){
-        undo.setEnabled(currentManager.canUndo());
-        redo.setEnabled(currentManager.canRedo());
-    }
+//    public void updateMI(){
+//        undo.setEnabled(currentManager.canUndo());
+//        redo.setEnabled(currentManager.canRedo());
+//    }
     private SpellCheckManager scm;
 
     public EditorPanel(JMenuItem undo, JMenuItem redo) {
@@ -37,7 +37,7 @@ public class EditorPanel extends JPanel {
             public void stateChanged(ChangeEvent changeEvent) {
                 if (tabbedEditorPane.getTabCount() > 0) {
                     currentManager = ((Document) tabbedEditorPane.getSelectedComponent()).getCurrentManager();
-                    updateMI();
+//                    updateMI();
                 }
                 if (tabbedEditorPane.getTabCount() <= 0) {
 
@@ -109,7 +109,7 @@ public class EditorPanel extends JPanel {
         } catch (CannotRedoException cre) {
             cre.printStackTrace();
         }
-        updateMI();
+//        updateMI();
     }
 
     public void tryRedo() {
@@ -118,7 +118,7 @@ public class EditorPanel extends JPanel {
         } catch (CannotRedoException cre) {
             cre.printStackTrace();
         }
-        updateMI();
+//        updateMI();
     }
 
     ChangeListener tabbedChangedListener = new ChangeListener() {

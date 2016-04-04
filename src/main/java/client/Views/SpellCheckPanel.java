@@ -1,5 +1,6 @@
-package uielements;
+package client.Views;
 
+import uielements.ColorSet;
 import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;

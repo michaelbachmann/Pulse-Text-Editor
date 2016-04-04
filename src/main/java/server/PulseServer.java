@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Map;
 
 public class PulseServer {
 
@@ -29,7 +28,7 @@ public class PulseServer {
 
     private void initializeApplication() {
         // Setup Port
-        port = readPort();  // try setting port
+        port = ConfigureSettings.readPort(ConfigureSettings.getSetings(server.Constants.CONFIG_FILE));  // try setting port
         if (!(port > utilities.Constants.LOW_PORT && port < utilities.Constants.HIGH_PORT)) {
             System.exit(5); // check if in use????
         }
@@ -52,7 +51,7 @@ public class PulseServer {
 
     private void startListening() {
         try {
-            ss = new ServerSocket(6789);
+            ss = new ServerSocket(port);
             ss.setReuseAddress(true);
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
@@ -71,24 +70,6 @@ public class PulseServer {
             ServerGUI.addMessage(Constants.SERVER_STOPPED_STRING);
         }
 
-    }
-
-    // Grabs the port from the config file
-    private int readPort() {
-        Map<String, String> settings = ConfigureSettings.getSetings(Constants.CONFIG_FILE);
-        if (settings.containsKey(Constants.PORT_LABEL_STRING)) {
-            try {
-                int port = Integer.parseInt(settings.get(Constants.PORT_LABEL_STRING));
-                System.out.println("Listening on port: " + port);
-                return port;
-            } catch (NumberFormatException nfe) {
-                System.out.println(nfe.getMessage());
-                System.out.println("Invalid Port: " + settings.get(Constants.PORT_LABEL_STRING));
-                System.out.println("Please check the configuration file and try restarting the server.");
-                System.exit(1);
-            }
-        }
-        return -1;
     }
 
     // Main
