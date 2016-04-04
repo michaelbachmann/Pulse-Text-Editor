@@ -65,11 +65,4 @@ public class ServerListener extends Thread {
             }
         }
     }
-
-//    public void sendMessage(User user) {
-//        this.chatMessage = chatMessage;
-//        for (ServerClientCommunicator scc : sccVector) {
-//            scc.sendUser(chatMessage);
-//        }
-//    }
 }

@@ -41,6 +41,7 @@ Temporary Items
 .idea/dataSources.ids
 .idea/dataSources.xml
 .idea/dataSources.local.xml
+/src/main/java/client/ViewController.java
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml

@@ -6,69 +6,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 // Client Listener class for network connection
 public class ClientListener extends Thread {
-    private int port;
-    private String hostname;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
-    private Scanner scan;
     private Socket mSocket;
-    private ClientGUI mClientGUI;
+    private User user;
 
-
-    public ClientListener(Socket socket) {
+    public ClientListener(User user, Socket socket) {
         mSocket = socket;
-//        mClientGUI = clientGUI;
+        this.user = user;
         boolean socketReady = initializeVariables();
         if (socketReady) {
-            login(new User("Miguel", "pimp1"));
+            login(user);
             start();
         }
-
-//            try {
-//                oos = new ObjectOutputStream(socket.getOutputStream());
-//                ois = new ObjectInputStream(socket.getInputStream());
-//                this.start();
-//
-//                scan = new Scanner(System.in);
-//                while(true) {
-////                    if (messageReady) {
-////                        try {
-////                            oos.writeObject(user);
-////                            oos.flush();
-////                        } catch (IOException ioe) {
-////                            System.out.println("Failed To Login");
-////                        }
-////                        messageReady = false;
-////                    }
-//
-//
-//
-//                    String line = scan.nextLine();
-//                    if (line.equals("exit"))
-//                        break;
-//                    oos.writeObject(new User("Michaelllll", "adiaido"));
-//                    oos.flush();
-//                }
-//            } catch (IOException ioe) {
-//                System.out.println("ioe: " + ioe.getMessage());
-//            } finally {
-//                try {
-//                    if (socket != null) {
-//                        socket.close();
-//                        System.out.println("Socket closed");
-//                    }
-//                    if (scan != null) {
-//                        scan.close();
-//                    }
-//                } catch (IOException ioe) {
-//                    System.out.println("ioe: " + ioe.getMessage());
-//                }
-//            }
-
     }
 
     private boolean initializeVariables() {
@@ -81,11 +34,7 @@ public class ClientListener extends Thread {
         }
         return true;
     }
-//    public void sendMessage(String msg) {
-//        pw.println(msg);
-//        pw.flush();
-//    }
-//
+
     public void login(User user) {
         try {
             oos.writeObject(user);
@@ -93,8 +42,6 @@ public class ClientListener extends Thread {
         } catch (IOException ioe) {
             System.out.println("Failed To Login");
         }
-
-
     }
 
     public void run() {

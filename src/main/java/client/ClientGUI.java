@@ -66,7 +66,6 @@ public class ClientGUI extends JFrame {
         cardLayout.show(viewController, "Splash");
         add(viewController);
         menuBar.setVisible(false);
-//            clientListener = new ClientListener(this, socket);
     }
 
 
@@ -382,9 +381,7 @@ public class ClientGUI extends JFrame {
                } else {
                     User user = new User(loginPanel.getUsernameField().getText(), loginPanel.getPasswordField().getText());
                     System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() );
-//                    clientListener.setUser(user);
-//                    clientListener.setMessageReady(true);
-                    clientListener = new ClientListener(socket);
+                    clientListener = new ClientListener(user, socket);
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }
@@ -393,15 +390,6 @@ public class ClientGUI extends JFrame {
 
 
     }
-
-
-
-
-    // Manage when undo and redo are available
-//    public void updateMI(){
-//        undoMI.setEnabled(currentManager.canUndo());
-//        redoMI.setEnabled(currentManager.canRedo());
-//    }
 
     // Helper function to toggle allowable items
     public void tabOpen(boolean bool) {
@@ -413,23 +401,6 @@ public class ClientGUI extends JFrame {
         scRunMI.setEnabled(bool);
         scConfigureMI.setEnabled(bool);
     }
-
-
-
-    // Mark: Delegate
-    // This class acts as a delegate between the Document and Editor
-    // It maintains an instance of an editor and is passed "this" when the editor
-    // is instantiated. This is done to get a reference to our SCM that is
-    // a member of our editor class
-//    class MenuItemDelegate implements MenuItemListener {
-//        ClientGUI editor;
-//        MenuItemDelegate(ClientGUI editor) {
-//            this.editor = editor;
-//        }
-//        @Override
-//        public void updateUndoMI() { updateMI(); }
-//    }
-
 
     /********************************************************************************
      * PURE GRAPHICS
