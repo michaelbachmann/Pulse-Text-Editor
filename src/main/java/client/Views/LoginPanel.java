@@ -12,8 +12,17 @@ public class LoginPanel extends JPanel {
     JButton login;
     ImageIcon icon_image;
     JLabel imageLabel, usernameLabel, passwordLabel;
-    JTextField usernameField, passwordField;
+    JTextField usernameField;
+    JTextField passwordField;
     GridBagConstraints gbc;
+
+    public JTextField getUsernameField() {
+        return usernameField;
+    }
+
+    public JTextField getPasswordField() {
+        return passwordField;
+    }
 
     public JButton getLogin() {
         return login;

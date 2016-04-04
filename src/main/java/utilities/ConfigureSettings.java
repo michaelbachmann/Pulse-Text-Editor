@@ -34,8 +34,8 @@ final public class ConfigureSettings {
         Map<String, String> settings = new HashMap<>();
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(server.Constants.CONFIG_FILE));
-            parseConfigFile(br, settings);
+            br = new BufferedReader(new FileReader(file));
+            settings = parseConfigFile(br, settings);
         } catch (FileNotFoundException fnfe) {
             System.out.println(fnfe.getMessage());
         } catch (IOException ioe) {
@@ -61,16 +61,21 @@ final public class ConfigureSettings {
 
         while (line != null) {
             line = line.trim();
+            st = new StringTokenizer(line, server.Constants.CONFIG_FILE_DELIMITER);
             if (line.startsWith("#")) {// ignore line since it is a comment
                 System.out.println(line);
-            } else if (line.startsWith(Constants.PORT_STRING) || line.startsWith(Constants.HOST_STRING)) {
+            } else if (line.startsWith(Constants.HOST_STRING)) {
                 System.out.println(line);
-                st = new StringTokenizer(line, server.Constants.CONFIG_FILE_DELIMITER);
+                key = st.nextToken();
+                value = st.nextToken();
+                settings.put(key, value);
+            } else if (line.startsWith(Constants.PORT_STRING)) {
+                System.out.println(line);
                 key = st.nextToken();
                 value = st.nextToken();
                 settings.put(key, value);
             } else if (line.length() == 0) {
-                // this would be a blank line
+                System.out.println("Blank Line");
             } else {
                 // this would be an unrecognized line
                 System.out.println(server.Constants.UNRECOGNIZED_LINE + line);

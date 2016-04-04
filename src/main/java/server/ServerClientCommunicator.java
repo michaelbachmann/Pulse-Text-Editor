@@ -1,8 +1,10 @@
 package server;
 
-import resources.ChatMessage;
+import resources.User;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 // Thread that that manages connection with user
@@ -11,7 +13,6 @@ public class ServerClientCommunicator extends Thread {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     private ServerListener serverListener;
-    public boolean closecommunication = true;
 
     public ServerClientCommunicator(Socket socket, ServerListener serverListener) throws IOException {
         this.socket = socket;
@@ -20,31 +21,30 @@ public class ServerClientCommunicator extends Thread {
         this.ois = new ObjectInputStream(socket.getInputStream());
     }
 
-    public void sendMessage(ChatMessage chatMessage) {
+    public void sendUser(User user) {
         try {
-            oos.writeObject(chatMessage);
+            oos.writeObject(user);
             oos.flush();
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
     }
 
+    public void requestStop(){
+        try {
+            ServerGUI.addMessage("Socket closed....");
+            socket.close();
+        } catch (IOException ioe1) {
+            ServerGUI.addMessage("io1: " + ioe1.getMessage());
+        }
+    }
+
     public void run() {
         try {
             while (true) {
-                ChatMessage message = (ChatMessage) ois.readObject();
+                User user = (User) ois.readObject();
+                ServerGUI.addMessage("Login from: " + user.getUsername() + " Password: " + user.getPassword());
             }
-//            ChatMessage message = (ChatMessage) ois.readObject();
-//            cs.sendMessageToAllClients(message);
-//            ServerGUI.addMessage(socket.getInetAddress() + ":" + socket.getPort() + " - " + message.getMessage());
-//            String line = br.readLine();
-//            while (line != null) {
-//                ServerGUI.addMessage(socket.getInetAddress() + ":" + socket.getPort() + " - " + line);
-//                line = br.readLine();
-//            }
-//            while (closecommunication) {
-//
-//            }
         } catch (ClassNotFoundException cnfe) {
             System.out.println("cnfe in run: " + cnfe.getMessage());
         } catch (IOException ioe) {
@@ -52,11 +52,12 @@ public class ServerClientCommunicator extends Thread {
             serverListener.removeServerClientCommunicator(this);
             ServerGUI.addMessage(socket.getInetAddress() + ":" + socket.getPort() + " - " + Constants.CLIENT_DISCONNETED_STRING);
             // socket closed
-            try {
-                socket.close();
-            } catch (IOException ioe1) {
-                System.out.println(ioe1.getMessage());
-            }
+//            try {
+//                ServerGUI.addMessage("Socket closed....");
+//                socket.close();
+//            } catch (IOException ioe1) {
+//                ServerGUI.addMessage("io1: " + ioe1.getMessage());
+//            }
         }
     }
 

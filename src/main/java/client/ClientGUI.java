@@ -4,9 +4,10 @@ import client.Views.EditorPanel;
 import client.Views.LoginPanel;
 import client.Views.RegisterPanel;
 import client.Views.SplashPanel;
-import resources.Verify;
 import com.apple.eawt.Application;
 import resources.Document;
+import resources.User;
+import resources.Verify;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
 import uielements.Constantsssss;
@@ -20,7 +21,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 public class ClientGUI extends JFrame {
@@ -43,20 +47,29 @@ public class ClientGUI extends JFrame {
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
     private JPanel viewController;
+    private ClientListener clientListener;
+    private Socket socket;
+
+
+
 
     // MARK: Constructor
-    public ClientGUI () {
+    public ClientGUI (Socket socket) {
         super("Pulse");
+        this.socket = socket;
         instantiateComponents();
         createGUI();
+        this.setVisible(true);
         addActions();
         setupOSXIcon();
         setupFont();
         cardLayout.show(viewController, "Splash");
         add(viewController);
         menuBar.setVisible(false);
-        this.setVisible(true);
+//            clientListener = new ClientListener(this, socket);
     }
+
+
 
     private void setupIcons() {
         //All credit goes to http://somerandomdude.com/work/sanscons/
@@ -360,10 +373,18 @@ public class ClientGUI extends JFrame {
         loginPanel.getLogin().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!Verify.validSignUp(registerPanel.getUsernameField().getText(), registerPanel.getPasswordField().getText())) {
+                if (!Verify.validSignUp(loginPanel.getUsernameField().getText(), loginPanel.getPasswordField().getText())) {
                     JOptionPane.showMessageDialog(ClientGUI.this, "Password must contain at least: 1-Number and 1-Uppercase Letter",
                             "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
+
+                    cardLayout.show(viewController, "Editor");
+                    menuBar.setVisible(true);
                } else {
+                    User user = new User(loginPanel.getUsernameField().getText(), loginPanel.getPasswordField().getText());
+                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() );
+//                    clientListener.setUser(user);
+//                    clientListener.setMessageReady(true);
+                    clientListener = new ClientListener(socket);
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }

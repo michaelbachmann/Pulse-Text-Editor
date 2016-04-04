@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Document extends JPanel {
+public class Document extends JPanel implements Serializable {
 
     // MARK: Member Variables
     public static final long serialVersionUID = 1;
