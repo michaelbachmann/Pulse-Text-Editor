@@ -1,6 +1,5 @@
 package resources;
 
-import client.MenuItemListener;
 import spellchecker.SpellCheckManager;
 import spellchecker.StringTuple;
 import uielements.ColorSet;
@@ -42,13 +41,13 @@ public class Document extends JPanel {
     private ArrayList<String> suggestionList;
 
 
-    private ArrayList<MenuItemListener> listeners;
-    // Delegate: Adds a listener to our list
-    public void addListener(MenuItemListener toAdd) { listeners.add(toAdd); }
-    // Delegate: Event that tells our menu items to update
+//    private ArrayList<MenuItemListener> listeners;
+//    // Delegate: Adds a listener to our list
+//    public void addListener(MenuItemListener toAdd) { listeners.add(toAdd); }
+//    // Delegate: Event that tells our menu items to update
     public void updateMenuItems() {
-        for (MenuItemListener listener: listeners)
-            listener.updateUndoMI();
+//        for (MenuItemListener listener: listeners)
+//            listener.updateUndoMI();
     }
 
 
@@ -62,7 +61,7 @@ public class Document extends JPanel {
         spellCheckPanel = new SpellCheckPanel();
         configurePanel = new ConfigurePanel();
         undoManager = new UndoManager();
-        listeners = new ArrayList<MenuItemListener>();
+//        listeners = new ArrayList<MenuItemListener>();
 
         scrollPane.getVerticalScrollBar().setUI(new FlatButtonUI.FlatScrollBarUI());
         scrollPane.setBorder(BorderFactory.createEmptyBorder());

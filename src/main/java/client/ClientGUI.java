@@ -5,14 +5,9 @@ import resources.Document;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
 import uielements.Constantsssss;
-import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,9 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
 
 public class ClientGUI extends JFrame {
@@ -33,74 +26,34 @@ public class ClientGUI extends JFrame {
     private JMenu fileMenu, editMenu, spellCheckMenu;
     private JMenuItem newMI, openMI, saveMI, closeMI, undoMI, redoMI, cutMI, copyMI, pasteMI, selectAllMI, scRunMI, scConfigureMI;
     private List<JMenuItem> menuList;
-    private JTabbedPane tabbedEditorPane;
+//    private JTabbedPane tabbedEditorPane;
     private SpellCheckManager scm;
-    private UndoManager currentManager;
+//    private UndoManager currentManager;
     // Delegate: Class to manage events between editor and documents
-    private MenuItemDelegate delegate = new MenuItemDelegate(this);
+//    private MenuItemDelegate delegate = new MenuItemDelegate(this);
     private ImageIcon newIcon, openIcon, saveIcon, closeIcon, copyIcon, pasteIcon, selectAllIcon, scIcon, configIcon, cutIcon, redoIcon, undoIcon;
-    private BackgroundPanel background;
-    private JPanel background_panel;
+    private SplashPanel backgroundPanel;
+    private EditorPanel editorPanel;
+    private Map<String,JMenuItem> menuItems;
+    private JPanel viewController;
 
     // MARK: Constructor
     public ClientGUI () {
         super("Pulse");
+//        menuItems = new HashMap<>();
         instantiateComponents();
         createGUI();
         addActions();
         setupOSXIcon();
         setupFont();
+        editorPanel = new EditorPanel(undoMI, redoMI);
+        viewController = new JPanel(new CardLayout());
+        viewController.add("Editor", editorPanel);
+        CardLayout cardLayout = (CardLayout) viewController.getLayout();
+        cardLayout.show(viewController, "Editor");
+        setContentPane(viewController);
+
         this.setVisible(true);
-    }
-
-    public void setupOSXIcon() {
-        // Try to set the application icon for os x
-        try {
-            Application application = Application.getApplication();
-            ImageIcon icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
-            Image dock_image = icon_image.getImage();
-            background = new BackgroundPanel(dock_image);
-            background.setVisible(true);
-            setContentPane(background);
-            application.setDockIconImage(dock_image);
-            setIconImage(icon_image.getImage());  // set for other OS's
-            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constantsssss.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
-    // Trys to setup app font, uses default if not
-    public void setupFont() {
-        //create the font to use. Specify the size!
-        try {
-            // All credit for this font goes to the original owner
-            // http://www.1001fonts.com/open-sans-font.html#license
-            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constantsssss.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
-            GraphicsEnvironment gc = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            gc.registerFont(myFont);
-            setUIFont(myFont);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch(FontFormatException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // For Setting OS X Doc Icon
-    public boolean exists(String className) {
-        try {
-            Class.forName( className, false, null );
-            return true;
-        } catch (ClassNotFoundException exception) {
-            return false;
-        }
-    }
-
-    // For Setting OS X Doc Icon
-    public void setIcon( BufferedImage icn ) {
-        if ( exists( "com.apple.eawt.Application" ) )
-            Application.getApplication().setDockIconImage( icn );
     }
 
     private void setupIcons() {
@@ -123,9 +76,10 @@ public class ClientGUI extends JFrame {
     private void instantiateComponents () {
         // SpellChecker
         scm = new SpellCheckManager();
+//        pulseMenuBar = new PulseMenuBar();
         // Setup All Icons
         setupIcons();
-        // Menu Bar Setup
+//         Menu Bar Setup
         menuBar = new JMenuBar() {
             @Override
             public void paintComponent(Graphics g) {
@@ -158,7 +112,7 @@ public class ClientGUI extends JFrame {
             }
         };
 
-        // Menu Items
+//         Menu Items
         newMI = new JMenuItem("New", newIcon);
         openMI = new JMenuItem("Open", openIcon);
         saveMI = new JMenuItem("Save", saveIcon);
@@ -175,14 +129,18 @@ public class ClientGUI extends JFrame {
         menuList.addAll(Arrays.asList(newMI,openMI,saveMI,closeMI,
                 undoMI,redoMI,cutMI,copyMI,pasteMI,
                 selectAllMI,scRunMI,scConfigureMI));
+//         add to map
+//        for (JMenuItem item: menuList) {
+//            menuItems.put(item.getText(), item);
+//        }
 
-        tabbedEditorPane = new JTabbedPane();
-        tabbedEditorPane.setUI(new FlatButtonUI.FlatTabbedPaneUI());
+//        tabbedEditorPane = new JTabbedPane();
+//        tabbedEditorPane.setUI(new FlatButtonUI.FlatTabbedPaneUI());
     }
 
     private void createGUI() {
-        setSize(800,600);
-        setLocation(100,100);
+        setSize(Constants.APPLICATION_WIDTH,Constants.APPLICATION_HEIGHT);
+        setLocationRelativeTo(null);
         fileMenu.add(newMI);
         fileMenu.add(openMI);
         fileMenu.add(saveMI);
@@ -199,10 +157,10 @@ public class ClientGUI extends JFrame {
         menuBar.add(editMenu);
         menuBar.add(spellCheckMenu);
         setJMenuBar(menuBar);
-        allowItemsSelectable(false);
+        tabOpen(false);
         undoMI.setEnabled(false);
         redoMI.setEnabled(false);
-        add(tabbedEditorPane);
+//        add(tabbedEditorPane);
         setUpMenuLook();
     }
 
@@ -236,21 +194,21 @@ public class ClientGUI extends JFrame {
     }
 
     // Listens for changes in tabs
-    ChangeListener tabbedChangedListener = new ChangeListener() {
-        public void stateChanged(ChangeEvent changeEvent) {
-            if (tabbedEditorPane.getTabCount() != 0) {
-                setContentPane(tabbedEditorPane);
-                currentManager = ((Document) tabbedEditorPane.getSelectedComponent()).getCurrentManager();
-            } else {
-                getContentPane().removeAll(); // uhhh
-                setContentPane(background);
-            }
-        }
-    };
+//    ChangeListener tabbedChangedListener = new ChangeListener() {
+//        public void stateChanged(ChangeEvent changeEvent) {
+//            if (tabbedEditorPane.getTabCount() != 0) {
+//                setContentPane(tabbedEditorPane);
+//                currentManager = ((Document) tabbedEditorPane.getSelectedComponent()).getCurrentManager();
+//            } else {
+//                getContentPane().removeAll(); // uhhh
+//                setContentPane(backgroundPanel);
+//            }
+//        }
+//    };
 
     private void addActions() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tabbedEditorPane.addChangeListener(tabbedChangedListener);
+//        tabbedEditorPane.addChangeListener(tabbedChangedListener);
 
         // Shortcut Setup
         newMI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.META_MASK));
@@ -267,17 +225,18 @@ public class ClientGUI extends JFrame {
         newMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
 //                setContentPane(tabbedEditorPane);
-                allowItemsSelectable(true);
+                tabOpen(true);
                 Document newDocument = new Document(scm);
-                tabbedEditorPane.addTab("new", newDocument);
-                tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
-                newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
+                editorPanel.newTab("new", newDocument);
+//                tabbedEditorPane.addTab("new", newDocument);
+//                tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
+//                newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
             }
         });
         openMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 // Create new file chooser and prompt for the file
-                allowItemsSelectable(true);
+                tabOpen(true);
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File("."));
                 fileChooser.setFileFilter(new FileNameExtensionFilter("txt files (*.txt)", "txt", "text"));
@@ -285,95 +244,110 @@ public class ClientGUI extends JFrame {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     Document newDocument = new Document(selectedFile, scm);
-                    tabbedEditorPane.addTab(newDocument.getName(), newDocument);
-                    tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
-                    newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
+                    editorPanel.newTab(newDocument.getName(), newDocument);
+//                    tabbedEditorPane.addTab(newDocument.getName(), newDocument);
+//                    tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
+//                    newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
                 }
             }
         });
         closeMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
                 // getSelectedIndex returns -1 if there are no tabs
-                if (tabbedEditorPane.getTabCount() >= 0)
-                    tabbedEditorPane.remove(tabbedEditorPane.getSelectedComponent());
-                if (tabbedEditorPane.getTabCount() == 0)
-                    allowItemsSelectable(false);
+//                if (tabbedEditorPane.getTabCount() >= 0)
+//                    tabbedEditorPane.remove(tabbedEditorPane.getSelectedComponent());
+//                if (tabbedEditorPane.getTabCount() == 0)
+//                    allowItemsSelectable(false);
+                if (editorPanel.closeTab() == -1)
+                    tabOpen(false);
             }
         });
         saveMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
+                editorPanel.saveTab();
                 // getSelectedIndex returns -1 if there are no tabs
                 // Call Document save method to write the file and change the tab name
-                if (tabbedEditorPane.getSelectedIndex() >= 0) {
-                    ((Document) tabbedEditorPane.getSelectedComponent()).save();
-                    tabbedEditorPane.setTitleAt(tabbedEditorPane.getSelectedIndex(), ((Document) tabbedEditorPane.getSelectedComponent()).getName());
-                }
+//                if (tabbedEditorPane.getSelectedIndex() >= 0) {
+//                    ((Document) tabbedEditorPane.getSelectedComponent()).save();
+//                    tabbedEditorPane.setTitleAt(tabbedEditorPane.getSelectedIndex(), ((Document) tabbedEditorPane.getSelectedComponent()).getName());
+//                }
             }
         });
         selectAllMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                ((Document) tabbedEditorPane.getSelectedComponent()).selectAll();
+                editorPanel.selectAll();
             }
         });
         cutMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                ((Document) tabbedEditorPane.getSelectedComponent()).cut();
+                editorPanel.cut();
+//                ((Document) tabbedEditorPane.getSelectedComponent()).cut();
             }
         });
         copyMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                ((Document) tabbedEditorPane.getSelectedComponent()).copy();
+                editorPanel.copy();
+//                ((Document) tabbedEditorPane.getSelectedComponent()).copy();
             }
         });
         pasteMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                ((Document) tabbedEditorPane.getSelectedComponent()).paste();
+                editorPanel.paste();
+//                ((Document) tabbedEditorPane.getSelectedComponent()).paste();
             }
         });
         scRunMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                tabbedEditorPane.requestFocus();
-                ((Document) tabbedEditorPane.getSelectedComponent()).runSC();
+                editorPanel.runSpellCheck();
+//                tabbedEditorPane.requestFocus();
+//                ((Document) tabbedEditorPane.getSelectedComponent()).runSC();
             }
         });
         scConfigureMI.addActionListener(new ActionListener() {
+//            editorPanel.
             public void actionPerformed(ActionEvent ge) {
-                tabbedEditorPane.requestFocus();
-                ((Document) tabbedEditorPane.getSelectedComponent()).runConfigure();
+                editorPanel.runConfigure();
+//                tabbedEditorPane.requestFocus();
+//                ((Document) tabbedEditorPane.getSelectedComponent()).runConfigure();
             }
         });
         undoMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    currentManager.undo();
-                } catch (CannotRedoException cre) {
-                    cre.printStackTrace();
-                }
-                updateMI();
+                editorPanel.tryUndo();
+//                try {
+//                    currentManager.undo();
+//                } catch (CannotRedoException cre) {
+//                    cre.printStackTrace();
+//                }
+//                updateMI();
             }
         });
         redoMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    currentManager.redo();
-                } catch (CannotRedoException cre) {
-                    cre.printStackTrace();
-                }
-                updateMI();
+                editorPanel.tryRedo();
+//                try {
+//                    currentManager.redo();
+//                } catch (CannotRedoException cre) {
+//                    cre.printStackTrace();
+//                }
+//                updateMI();
             }
         });
     }
 
+
+
+
     // Manage when undo and redo are available
-    public void updateMI(){
-        undoMI.setEnabled(currentManager.canUndo());
-        redoMI.setEnabled(currentManager.canRedo());
-    }
+//    public void updateMI(){
+//        undoMI.setEnabled(currentManager.canUndo());
+//        redoMI.setEnabled(currentManager.canRedo());
+//    }
 
     // Helper function to toggle allowable items
-    private void allowItemsSelectable(boolean bool) {
+    public void tabOpen(boolean bool) {
         cutMI.setEnabled(bool);
         copyMI.setEnabled(bool);
         pasteMI.setEnabled(bool);
@@ -383,52 +357,78 @@ public class ClientGUI extends JFrame {
         scConfigureMI.setEnabled(bool);
     }
 
+
+
     // Mark: Delegate
     // This class acts as a delegate between the Document and Editor
     // It maintains an instance of an editor and is passed "this" when the editor
     // is instantiated. This is done to get a reference to our SCM that is
     // a member of our editor class
-    class MenuItemDelegate implements MenuItemListener {
-        ClientGUI editor;
-        MenuItemDelegate(ClientGUI editor) {
-            this.editor = editor;
-        }
-        @Override
-        public void updateUndoMI() { updateMI(); }
-    }
-
-//    // MARK: Main Function
-//    public static void main(String[] args) {
-//        try { // Set cross-platform Java L&F (also called "Metal")
-//            UIManager.put("JMenuBar.selectionBackground", ColorSet.DARKBLUE);
-//            UIManager.put("MenuItem.selectionBackground", ColorSet.DARKBLUE);
-//            UIManager.put("MenuItem.selectionForeground", ColorSet.SALMON);
-//            UIManager.put("Menu.selectionBackground", ColorSet.DARKBLUE);
-//            UIManager.put("Menu.selectionForeground", ColorSet.SALMON);
-//            UIManager.setLookAndFeel(
-//                    UIManager.getCrossPlatformLookAndFeelClassName());
-//        } catch (UnsupportedLookAndFeelException e) { e.printStackTrace(); }
-//        catch (ClassNotFoundException e) { e.printStackTrace(); }
-//        catch (InstantiationException e) { e.printStackTrace(); }
-//        catch (IllegalAccessException e) { e.printStackTrace(); }
-//        ClientGUI gui = new ClientGUI();
+//    class MenuItemDelegate implements MenuItemListener {
+//        ClientGUI editor;
+//        MenuItemDelegate(ClientGUI editor) {
+//            this.editor = editor;
+//        }
+//        @Override
+//        public void updateUndoMI() { updateMI(); }
 //    }
 
-    // Background panel inner class to display centered logo
-    class BackgroundPanel extends JPanel {
-        private Image img;
-        public BackgroundPanel(Image img) {
-            this.img = img;
+
+    /********************************************************************************
+     * PURE GRAPHICS
+     *
+     *
+     *
+     *
+     * */
+
+    public void setupOSXIcon() {
+        // Try to set the application icon for os x
+        try {
+            Application application = Application.getApplication();
+            ImageIcon icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
+            Image dock_image = icon_image.getImage();
+//            backgroundPanel = new SplashPanel(dock_image);
+//            backgroundPanel.setVisible(true);
+//            setContentPane(backgroundPanel);
+            application.setDockIconImage(dock_image);
+            setIconImage(icon_image.getImage());  // set for other OS's
+            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constantsssss.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
+        } catch (Exception e) {
+            e.getMessage();
         }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.translate(this.getParent().getWidth() / 2, this.getParent().getHeight() / 2);
-            g2d.translate(-100 / 2, -100/2);
-            g2d.drawImage(img, 0, 0, 100, 100, null);
+    }
+    // Trys to setup app font, uses default if not
+    public void setupFont() {
+        //create the font to use. Specify the size!
+        try {
+            // All credit for this font goes to the original owner
+            // http://www.1001fonts.com/open-sans-font.html#license
+            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constantsssss.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
+            GraphicsEnvironment gc = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            gc.registerFont(myFont);
+            setUIFont(myFont);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch(FontFormatException e) {
+            e.printStackTrace();
         }
     }
 
+    // For Setting OS X Doc Icon
+    public boolean exists(String className) {
+        try {
+            Class.forName( className, false, null );
+            return true;
+        } catch (ClassNotFoundException exception) {
+            return false;
+        }
+    }
+
+    // For Setting OS X Doc Icon
+    public void setIcon( BufferedImage icn ) {
+        if ( exists( "com.apple.eawt.Application" ) )
+            Application.getApplication().setDockIconImage( icn );
+    }
 
 }
