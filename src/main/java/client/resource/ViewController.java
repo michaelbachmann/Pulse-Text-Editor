@@ -3,7 +3,7 @@
 //import resources.Document;
 //import spellchecker.SpellCheckManager;
 //import uielements.ColorSet;
-//import uielements.Constantsssss;
+//import uielements.UIConstants;
 //
 //import javax.swing.*;
 //import javax.swing.filechooser.FileNameExtensionFilter;
@@ -45,18 +45,18 @@
 //
 //    private void setupIcons() {
 //        //All credit goes to http://somerandomdude.com/work/sanscons/
-//        newIcon = new ImageIcon(Constantsssss.ICON_NEW);
-//        openIcon = new ImageIcon(Constantsssss.ICON_OPEN);
-//        saveIcon = new ImageIcon(Constantsssss.ICON_SAVE);
-//        closeIcon = new ImageIcon(Constantsssss.ICON_CLOSE);
-//        copyIcon = new ImageIcon(Constantsssss.ICON_COPY);
-//        pasteIcon = new ImageIcon(Constantsssss.ICON_PASTE);
-//        scIcon = new ImageIcon(Constantsssss.ICON_SPELLCHECK);
-//        configIcon = new ImageIcon(Constantsssss.ICON_CONFIG);
-//        cutIcon = new ImageIcon(Constantsssss.ICON_CUT);
-//        redoIcon = new ImageIcon(Constantsssss.ICON_REDO);
-//        undoIcon = new ImageIcon(Constantsssss.ICON_UNDO);
-//        selectAllIcon = new ImageIcon(Constantsssss.ICON_SELECTALL);
+//        newIcon = new ImageIcon(UIConstants.ICON_NEW);
+//        openIcon = new ImageIcon(UIConstants.ICON_OPEN);
+//        saveIcon = new ImageIcon(UIConstants.ICON_SAVE);
+//        closeIcon = new ImageIcon(UIConstants.ICON_CLOSE);
+//        copyIcon = new ImageIcon(UIConstants.ICON_COPY);
+//        pasteIcon = new ImageIcon(UIConstants.ICON_PASTE);
+//        scIcon = new ImageIcon(UIConstants.ICON_SPELLCHECK);
+//        configIcon = new ImageIcon(UIConstants.ICON_CONFIG);
+//        cutIcon = new ImageIcon(UIConstants.ICON_CUT);
+//        redoIcon = new ImageIcon(UIConstants.ICON_REDO);
+//        undoIcon = new ImageIcon(UIConstants.ICON_UNDO);
+//        selectAllIcon = new ImageIcon(UIConstants.ICON_SELECTALL);
 //    }
 //
 //
@@ -70,7 +70,7 @@
 //            @Override
 //            public void paintComponent(Graphics g) {
 //                Dimension size = this.getSize();
-//                g.drawImage(Toolkit.getDefaultToolkit().getImage(Constantsssss.MENU_BAR_IMG),0,0, size.width, size.height, this);
+//                g.drawImage(Toolkit.getDefaultToolkit().getImage(UIConstants.MENU_BAR_IMG),0,0, size.width, size.height, this);
 //            }
 //        };
 //        fileMenu = new JMenu("File") {

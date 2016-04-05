@@ -1,8 +1,9 @@
 package client.Views;
 
 import uielements.ColorSet;
-import uielements.Constantsssss;
 import uielements.componentuis.FlatButtonUI;
+import uielements.componentuis.GetUIComponents;
+import utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +11,7 @@ import java.awt.*;
 public class LoginPanel extends JPanel {
     JPanel rowOne, rowTwo, mainPanel;
     JButton login;
-    ImageIcon icon_image;
-    JLabel imageLabel, usernameLabel, passwordLabel;
+    JLabel imageLabel, usernameLabel, passwordLabel, nameLabel;
     JTextField usernameField;
     JTextField passwordField;
     GridBagConstraints gbc;
@@ -37,15 +37,12 @@ public class LoginPanel extends JPanel {
     }
 
     public void instantiateVariables() {
-        usernameLabel = new JLabel("Username: ");
-        passwordLabel = new JLabel("Password: ");
-        usernameField = new JTextField(20);
-        passwordField = new JPasswordField(20);
-        icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
-        Image image = icon_image.getImage(); // transform it
-        Image newimg = image.getScaledInstance(100, 100,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        icon_image = new ImageIcon(newimg);  // transform it back
-        imageLabel = new JLabel(icon_image);
+        usernameLabel = GetUIComponents.setBoldLabel("Username: ", 66,15);
+        passwordLabel = GetUIComponents.setBoldLabel("Password: ",66,15);
+        usernameField = GetUIComponents.setTextFieldLook("",20);
+        passwordField = GetUIComponents.setPasswordFieldLook(20);
+        imageLabel = GetUIComponents.getScaledIcon();
+        nameLabel = GetUIComponents.setBoldLabel(Constants.APP_NAME,165,15);
         login = new JButton("Login");
         mainPanel = new JPanel(new GridBagLayout());
         rowOne = new JPanel(new FlowLayout());
@@ -59,8 +56,6 @@ public class LoginPanel extends JPanel {
         rowOne.setBackground(ColorSet.EDITOR_BG_COLOR);
         rowTwo.setBackground(ColorSet.EDITOR_BG_COLOR);
         login.setUI(new FlatButtonUI());
-
-
         rowOne.add(usernameLabel);
         rowOne.add(usernameField);
         rowTwo.add(passwordLabel);

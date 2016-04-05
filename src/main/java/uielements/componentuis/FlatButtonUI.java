@@ -62,9 +62,6 @@ public class FlatButtonUI extends BasicButtonUI {
 
     public static class FlatComboBoxUI extends BasicComboBoxUI
     {
-
-
-
         protected void installDefaults()
         {
             super.installDefaults();
@@ -162,9 +159,9 @@ public class FlatButtonUI extends BasicButtonUI {
             if (isSelected)
                 g.setColor(ColorSet.SALMON);
             else if (getRolloverTab() == tabIndex)
-                g.setColor(ColorSet.DARKBLUE);
+                g.setColor(ColorSet.SALMON);
             else
-                g.setColor(ColorSet.BEIGE);
+                g.setColor(ColorSet.HOVER_COLOR);
 
             // Draw String and translate back
             g.drawString(title, (rect.width / 2 - fm.stringWidth(title) / 2) , maxTabHeight / 2 + fm.getMaxDescent() + 2);
@@ -180,7 +177,7 @@ public class FlatButtonUI extends BasicButtonUI {
             if (isSelected)
                 colorToPaint = ColorSet.DARKBLUE;
             else
-                colorToPaint = ColorSet.TURQUOISE;
+                colorToPaint = ColorSet.LIGHT_BLUE;
 
             // Draw Background
             g.setColor(colorToPaint);
@@ -193,7 +190,7 @@ public class FlatButtonUI extends BasicButtonUI {
 
         // Paint TabArea Turquise
         protected void paintTabArea(Graphics g, int tabPlacement, int selectedIndex) {
-            g.setColor(ColorSet.TURQUOISE);
+            g.setColor(ColorSet.LIGHT_BLUE);
             g.fillRect(0,0,tabPane.getWidth(), 28);
             super.paintTabArea(g, tabPlacement, selectedIndex);
         }
@@ -201,7 +198,7 @@ public class FlatButtonUI extends BasicButtonUI {
         // Paint vertical edge
         protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
             Rectangle rect = getTabBounds(tabIndex, new Rectangle(x, y, w, h));
-            g.setColor(ColorSet.EDGE_COLOR);
+            g.setColor(ColorSet.DARKER_BLUE);
             g.drawLine(rect.x + rect.width, 0, rect.x + rect.width, 28);
         }
 

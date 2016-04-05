@@ -1,8 +1,9 @@
 package client.Views;
 
 import uielements.ColorSet;
-import uielements.Constantsssss;
 import uielements.componentuis.FlatButtonUI;
+import uielements.componentuis.GetUIComponents;
+import utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class SplashPanel extends JPanel {
 
     JButton login, offline, register;
     ImageIcon icon_image;
-    JLabel imageLabel, filler;
+    JLabel imageLabel, name;
     GridBagConstraints gbc;
 
 
@@ -37,12 +38,8 @@ public class SplashPanel extends JPanel {
     }
 
     public void instantiateVariables() {
-        icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
-        Image image = icon_image.getImage(); // transform it
-        Image newimg = image.getScaledInstance(100, 100,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        icon_image = new ImageIcon(newimg);  // transform it back
-        imageLabel = new JLabel(icon_image);
-        filler = new JLabel("PuLse Text Editor");
+        imageLabel = GetUIComponents.getScaledIcon();
+        name = GetUIComponents.setBoldLabel(Constants.APP_NAME,115,15);
         login = new JButton("Login");
         offline = new JButton("Offline");
         register = new JButton("Sign Up");
@@ -60,6 +57,7 @@ public class SplashPanel extends JPanel {
         register.setUI(new FlatButtonUI());
         offline.setUI(new FlatButtonUI());
 
+
         rowOne.add(login);
         rowOne.add(register);
         gbc.gridx = 0;
@@ -69,7 +67,7 @@ public class SplashPanel extends JPanel {
 
         mainPanel.add(imageLabel,gbc);
         gbc.gridy = 1;
-        mainPanel.add(filler,gbc);
+        mainPanel.add(name,gbc);
         gbc.gridy = 2;
         mainPanel.add(rowOne, gbc);
         gbc.gridy = 3;

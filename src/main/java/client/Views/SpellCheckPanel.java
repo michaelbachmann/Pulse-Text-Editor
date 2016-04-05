@@ -33,17 +33,17 @@ public class SpellCheckPanel extends JPanel {
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
-        setBackground(ColorSet.TURQUOISE);
+        setBackground(ColorSet.LIGHT_BLUE);
         instantiateComponents();
         createGUI();
     }
 
     public void updateWord(String mispelledWord) {
-        currentWord.setText("Spelling: " + mispelledWord);
+        currentWord.setText("<html><b>Spelling: </b></html>" + mispelledWord);
     }
 
     public void populatePanel(ArrayList<String> suggestions, String mispelledWord) {
-        currentWord.setText("Spelling: " + mispelledWord);
+        currentWord.setText("<html><b>Spelling: </b></html>" + mispelledWord);
         comboBox.removeAllItems();
         for (String word : suggestions)
             comboBox.addItem(word);
@@ -51,7 +51,7 @@ public class SpellCheckPanel extends JPanel {
 
     public void populateMispelledWords(ArrayList<String> word) {
         mispelledWords = word;
-        currentWord.setText("Spelling: " + mispelledWords.get(0));
+        currentWord.setText("<html><b>Spelling: </b></html>" + mispelledWords.get(0));
     }
 
     public String getComboBoxValue() {
@@ -64,7 +64,7 @@ public class SpellCheckPanel extends JPanel {
 
         testPanel = new JPanel(new GridLayout(4,2,5,5));
         testPanel.setPreferredSize(new Dimension( 240, 125 ));
-        testPanel.setBackground(ColorSet.TURQUOISE);
+        testPanel.setBackground(ColorSet.LIGHT_BLUE);
         spelling = new JLabel("Spell Check");
         currentWord = new JLabel("Spelling: ");
         ignore = new JButton("Ignore");

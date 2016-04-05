@@ -7,7 +7,7 @@ import resources.User;
 import resources.Verify;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
-import uielements.Constantsssss;
+import uielements.UIConstants;
 import utilities.ConfigureSettings;
 import utilities.Hasher;
 
@@ -102,18 +102,18 @@ public class ClientGUI extends JFrame {
 
     private void setupIcons() {
         //All credit goes to http://somerandomdude.com/work/sanscons/
-        newIcon = new ImageIcon(Constantsssss.ICON_NEW);
-        openIcon = new ImageIcon(Constantsssss.ICON_OPEN);
-        saveIcon = new ImageIcon(Constantsssss.ICON_SAVE);
-        closeIcon = new ImageIcon(Constantsssss.ICON_CLOSE);
-        copyIcon = new ImageIcon(Constantsssss.ICON_COPY);
-        pasteIcon = new ImageIcon(Constantsssss.ICON_PASTE);
-        scIcon = new ImageIcon(Constantsssss.ICON_SPELLCHECK);
-        configIcon = new ImageIcon(Constantsssss.ICON_CONFIG);
-        cutIcon = new ImageIcon(Constantsssss.ICON_CUT);
-        redoIcon = new ImageIcon(Constantsssss.ICON_REDO);
-        undoIcon = new ImageIcon(Constantsssss.ICON_UNDO);
-        selectAllIcon = new ImageIcon(Constantsssss.ICON_SELECTALL);
+        newIcon = new ImageIcon(UIConstants.ICON_NEW);
+        openIcon = new ImageIcon(UIConstants.ICON_OPEN);
+        saveIcon = new ImageIcon(UIConstants.ICON_SAVE);
+        closeIcon = new ImageIcon(UIConstants.ICON_CLOSE);
+        copyIcon = new ImageIcon(UIConstants.ICON_COPY);
+        pasteIcon = new ImageIcon(UIConstants.ICON_PASTE);
+        scIcon = new ImageIcon(UIConstants.ICON_SPELLCHECK);
+        configIcon = new ImageIcon(UIConstants.ICON_CONFIG);
+        cutIcon = new ImageIcon(UIConstants.ICON_CUT);
+        redoIcon = new ImageIcon(UIConstants.ICON_REDO);
+        undoIcon = new ImageIcon(UIConstants.ICON_UNDO);
+        selectAllIcon = new ImageIcon(UIConstants.ICON_SELECTALL);
     }
 
     // Instantiate components
@@ -134,7 +134,7 @@ public class ClientGUI extends JFrame {
             @Override
             public void paintComponent(Graphics g) {
                 Dimension size = this.getSize();
-                g.drawImage(Toolkit.getDefaultToolkit().getImage(Constantsssss.MENU_BAR_IMG),0,0, size.width, size.height, this);
+                g.drawImage(Toolkit.getDefaultToolkit().getImage(UIConstants.MENU_BAR_IMG),0,0, size.width, size.height, this);
             }
         };
         fileMenu = new JMenu("File") {
@@ -208,6 +208,7 @@ public class ClientGUI extends JFrame {
         viewController.add("Register", registerPanel);
         viewController.add("Splash", splashPanel);
         viewController.add("Editor", editorPanel);
+        setBackground(ColorSet.DARK_BLUE_MIDDLE);
     }
 
 
@@ -219,9 +220,9 @@ public class ClientGUI extends JFrame {
         editMenu.setBorder(BorderFactory.createEmptyBorder(8,8,8,4));
         spellCheckMenu.setBorder(BorderFactory.createEmptyBorder(8,8,8,0));
         menuBar.setBackground(ColorSet.DARKBLUE);
-        fileMenu.setForeground(ColorSet.TURQUOISE);
-        editMenu.setForeground(ColorSet.TURQUOISE);
-        spellCheckMenu.setForeground(ColorSet.TURQUOISE);
+        fileMenu.setForeground(ColorSet.BASIC_FONT);
+        editMenu.setForeground(ColorSet.BASIC_FONT);
+        spellCheckMenu.setForeground(ColorSet.BASIC_FONT);
         for (JMenuItem item : menuList) {
             item.setBackground(ColorSet.DARKBLUE);
             item.setForeground(ColorSet.BEIGE);
@@ -501,11 +502,11 @@ public class ClientGUI extends JFrame {
         // Try to set the application icon for os x
         try {
             Application application = Application.getApplication();
-            ImageIcon icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
+            ImageIcon icon_image = new ImageIcon(UIConstants.PULSE_ICON);
             Image dock_image = icon_image.getImage();
             application.setDockIconImage(dock_image);
             setIconImage(icon_image.getImage());  // set for other OS's
-            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(Constantsssss.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
+            setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(UIConstants.CURSOR_ICON).getImage(),new Point(0,0),"custom cursor"));
         } catch (Exception e) {
             e.getMessage();
         }
@@ -516,7 +517,7 @@ public class ClientGUI extends JFrame {
         try {
             // All credit for this font goes to the original owner
             // http://www.1001fonts.com/open-sans-font.html#license
-            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constantsssss.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
+            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File(UIConstants.MAIN_FONT)).deriveFont(Font.PLAIN, 12f);
             GraphicsEnvironment gc = GraphicsEnvironment.getLocalGraphicsEnvironment();
             gc.registerFont(myFont);
             setUIFont(myFont);

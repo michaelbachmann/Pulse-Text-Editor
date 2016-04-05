@@ -2,6 +2,7 @@ package client.Views;
 
 import resources.Document;
 import spellchecker.SpellCheckManager;
+import uielements.ColorSet;
 import uielements.componentuis.FlatButtonUI;
 
 import javax.swing.*;
@@ -45,6 +46,7 @@ public class EditorPanel extends JPanel {
             }
         });
         add(tabbedEditorPane, BorderLayout.CENTER);
+        setBackground(ColorSet.DARK_BLUE_MIDDLE);
     }
 
     public String getCurrentTabName(){

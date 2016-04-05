@@ -65,10 +65,11 @@ public class Document extends JPanel {
 
         scrollPane.getVerticalScrollBar().setUI(new FlatButtonUI.FlatScrollBarUI());
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        textArea.setForeground(ColorSet.BASIC_FONT);
         textArea.setSelectionColor(ColorSet.HOVER_COLOR);
         textArea.setLineWrap(true);
         textArea.setMargin(new Insets(10,10,10,10) );
-//        textArea.setBackground(ColorSet.EDITOR_BG_COLOR);
+        textArea.setBackground(ColorSet.DARK_BLUE_MIDDLE);
 //        textArea.setForeground(ColorSet.EDITOR_FONT_COLOR);
 
     }

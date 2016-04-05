@@ -1,8 +1,8 @@
 package client.Views;
 
 import uielements.ColorSet;
-import uielements.Constantsssss;
 import uielements.componentuis.FlatButtonUI;
+import uielements.componentuis.GetUIComponents;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +10,7 @@ import java.awt.*;
 public class RegisterPanel extends JPanel {
     JPanel rowOne, rowTwo, rowThree, mainPanel;
     JButton login;
-    ImageIcon icon_image;
-    JLabel imageLabel, usernameLabel, passwordLabel,repeatLabel;
+    JLabel imageLabel, usernameLabel, passwordLabel,repeatLabel, nameLabel;
 
     public JTextField getUsernameField() {
         return usernameField;
@@ -37,21 +36,18 @@ public class RegisterPanel extends JPanel {
         setLayout(new BorderLayout());
         instantiateVariables();
         createGUI();
-        setBackground(ColorSet.DARKBLUE);
+        setBackground(ColorSet.EDITOR_BG_COLOR);
     }
 
     public void instantiateVariables() {
-        usernameLabel = new JLabel("Username: ");
-        passwordLabel = new JLabel("Password: ");
-        repeatLabel = new JLabel  ("Repeat:   ");
-        usernameField = new JTextField(20);
-        passwordField = new JPasswordField(20);
-        repeatField = new JPasswordField(20);
-        icon_image = new ImageIcon(Constantsssss.PULSE_ICON);
-        Image image = icon_image.getImage(); // transform it
-        Image newimg = image.getScaledInstance(100, 100,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        icon_image = new ImageIcon(newimg);  // transform it back
-        imageLabel = new JLabel(icon_image);
+        usernameLabel = GetUIComponents.setBoldLabel("Username: ",66,15);
+        passwordLabel = GetUIComponents.setBoldLabel("Password: ",66,15);
+        repeatLabel = GetUIComponents.setBoldLabel("Repeat:   ",66,15);
+        nameLabel = GetUIComponents.setBoldLabel(utilities.Constants.APP_NAME,115,15);
+        usernameField = GetUIComponents.setTextFieldLook("",20);
+        passwordField = GetUIComponents.setPasswordFieldLook(20);
+        repeatField = GetUIComponents.setPasswordFieldLook(20);
+        imageLabel = GetUIComponents.getScaledIcon();
         login = new JButton("Login");
         mainPanel = new JPanel(new GridBagLayout());
         rowOne = new JPanel(new FlowLayout());
@@ -82,12 +78,14 @@ public class RegisterPanel extends JPanel {
 
         mainPanel.add(imageLabel,gbc);
         gbc.gridy = 1;
-        mainPanel.add(rowOne,gbc);
+        mainPanel.add(nameLabel,gbc);
         gbc.gridy = 2;
-        mainPanel.add(rowTwo, gbc);
+        mainPanel.add(rowOne,gbc);
         gbc.gridy = 3;
-        mainPanel.add(rowThree,gbc);
+        mainPanel.add(rowTwo, gbc);
         gbc.gridy = 4;
+        mainPanel.add(rowThree,gbc);
+        gbc.gridy = 5;
         mainPanel.add(login, gbc);
         add(mainPanel, BorderLayout.CENTER);
     }

@@ -42,11 +42,11 @@ public class ConfigurePanel extends JPanel {
     // Add components
     private void createGUI() {
         // Set up UI stuff
-        setBackground(ColorSet.TURQUOISE);
+        setBackground(ColorSet.LIGHT_BLUE);
         dictionaryButton.setUI(new FlatButtonUI());
         keyboardButton.setUI(new FlatButtonUI());
         close.setUI(new FlatButtonUI());
-        northPanel.setBackground(ColorSet.TURQUOISE);
+        northPanel.setBackground(ColorSet.LIGHT_BLUE);
         dictionaryFilePath.setForeground(ColorSet.DARKBLUE);
         keyboardFilePath.setForeground(ColorSet.DARKBLUE);
 

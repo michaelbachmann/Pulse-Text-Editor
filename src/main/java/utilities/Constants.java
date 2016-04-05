@@ -7,4 +7,5 @@ public class Constants {
     public static final String DEFAULT_HOSTNAME = "localhost";
     public static final String PORT_STRING = "Port";
     public static final String HOST_STRING = "Hostname";
+    public static final String APP_NAME = "PuLse Text Editor";
 }

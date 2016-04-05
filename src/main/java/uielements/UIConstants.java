@@ -3,11 +3,13 @@ package uielements;
 /**
  * Created by Michael on 3/28/16.
  */
-public class Constantsssss {
+public class UIConstants {
     // App Icons
     public static final String PULSE_ICON = "resources/img/pulseIcon.png";
     public static final String CURSOR_ICON = "resources/img/cursor_test.png";
-    public static final String MENU_BAR_IMG = "resources/img/flatmenubar.png";
+//    public static final String MENU_BAR_IMG = "resources/img/flatmenubar.png";
+    public static final String MENU_BAR_IMG = "resources/img/PulseCopy.png";
+
 
     // Menu Icons
     public static final String ICON_NEW = "resources/img/menu-items/new.png";
