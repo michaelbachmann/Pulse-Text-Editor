@@ -21,10 +21,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Document extends JPanel implements Serializable {
+public class Document extends JPanel {
 
     // MARK: Member Variables
-    public static final long serialVersionUID = 1;
+    public static final long serialVersionUID = 99;
     private int indexStart, indexEnd;
     private Boolean configurePanelActive, spellCheckPanelActive;
     private String name, text;

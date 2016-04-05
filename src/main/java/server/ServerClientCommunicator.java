@@ -1,5 +1,6 @@
 package server;
 
+import resources.DocFile;
 import resources.User;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class ServerClientCommunicator extends Thread {
 
     public void sendUser(User user) {
         try {
+            user.addFile("ThisIsAFile");
             oos.writeObject(user);
             oos.flush();
         } catch (IOException ioe) {
@@ -42,8 +44,15 @@ public class ServerClientCommunicator extends Thread {
     public void run() {
         try {
             while (true) {
-                User user = (User) ois.readObject();
-                ServerGUI.addMessage("Login from: " + user.getUsername() + " Password: " + user.getPassword());
+                Object object = ois.readObject();
+                if (object instanceof User) {
+                    User user = (User) object;
+                    ServerGUI.addMessage("Login from: " + user.getUsername() + " Password: " + user.getPassword());
+                    sendUser(user);
+                } else if (object instanceof DocFile) {
+                    DocFile doc = (DocFile) object;
+                    ServerGUI.addMessage("Got document " + doc.getName() + "\n" + doc.getContent());
+                }
             }
         } catch (ClassNotFoundException cnfe) {
             System.out.println("cnfe in run: " + cnfe.getMessage());
@@ -51,13 +60,6 @@ public class ServerClientCommunicator extends Thread {
             System.out.println("Disconnected");
             serverListener.removeServerClientCommunicator(this);
             ServerGUI.addMessage(socket.getInetAddress() + ":" + socket.getPort() + " - " + Constants.CLIENT_DISCONNETED_STRING);
-            // socket closed
-//            try {
-//                ServerGUI.addMessage("Socket closed....");
-//                socket.close();
-//            } catch (IOException ioe1) {
-//                ServerGUI.addMessage("io1: " + ioe1.getMessage());
-//            }
         }
     }
 

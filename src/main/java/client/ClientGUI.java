@@ -6,11 +6,14 @@ import client.Views.RegisterPanel;
 import client.Views.SplashPanel;
 import com.apple.eawt.Application;
 import resources.Document;
+import resources.DocFile;
 import resources.User;
 import resources.Verify;
 import spellchecker.SpellCheckManager;
 import uielements.ColorSet;
 import uielements.Constantsssss;
+import utilities.ConfigureSettings;
+import utilities.Hasher;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -22,9 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
 
 public class ClientGUI extends JFrame {
@@ -36,11 +37,7 @@ public class ClientGUI extends JFrame {
     private JMenuItem newMI, openMI, saveMI, closeMI, undoMI, redoMI, cutMI, copyMI, pasteMI, selectAllMI, scRunMI, scConfigureMI;
     private List<JMenuItem> menuList;
     private CardLayout cardLayout;
-//    private JTabbedPane tabbedEditorPane;
     private SpellCheckManager scm;
-//    private UndoManager currentManager;
-    // Delegate: Class to manage events between editor and documents
-//    private MenuItemDelegate delegate = new MenuItemDelegate(this);
     private ImageIcon newIcon, openIcon, saveIcon, closeIcon, copyIcon, pasteIcon, selectAllIcon, scIcon, configIcon, cutIcon, redoIcon, undoIcon;
     private SplashPanel splashPanel;
     private EditorPanel editorPanel;
@@ -51,6 +48,37 @@ public class ClientGUI extends JFrame {
     private Socket socket;
 
 
+    private int port;
+    private String hostname;
+
+    private boolean getPortAndHost()  {
+        Map<String,String> settings = ConfigureSettings.getSetings(Constants.CONFIG_FILE);
+        port = ConfigureSettings.readPort(settings);  // try setting port
+        if (!(port > utilities.Constants.LOW_PORT && port < utilities.Constants.HIGH_PORT)) {
+            return false;
+        }
+        if (settings.containsKey(utilities.Constants.HOST_STRING)){
+            // check valid host for now dgaf
+            if (!settings.get(utilities.Constants.HOST_STRING).equals("localhost")){
+                return false; // check for diff hostname
+            } else {
+                hostname = settings.get(utilities.Constants.HOST_STRING);
+            }
+        }
+        return true;
+    }
+    public ClientGUI () {
+        super("Pulse");
+        instantiateComponents();
+        createGUI();
+        this.setVisible(true);
+        addActions();
+        setupOSXIcon();
+        setupFont();
+        cardLayout.show(viewController, "Splash");
+        add(viewController);
+        menuBar.setVisible(false);
+    }
 
 
     // MARK: Constructor
@@ -66,6 +94,7 @@ public class ClientGUI extends JFrame {
         cardLayout.show(viewController, "Splash");
         add(viewController);
         menuBar.setVisible(false);
+//        clientListener = new ClientListener(socket);
     }
 
 
@@ -364,6 +393,18 @@ public class ClientGUI extends JFrame {
                     JOptionPane.showMessageDialog(ClientGUI.this, "Password's do not match!",
                             "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
                 } else {
+                    if (getPortAndHost()){
+                        try {
+                            socket = new Socket(hostname,port);
+                            clientListener = new ClientListener(socket);
+                        } catch (IOException ioe ) {
+                            System.out.println(ioe.getMessage());
+                            // Continue to offline mode
+                        }
+                    }
+                    String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
+                    User user = new User(loginPanel.getUsernameField().getText(), hash);
+                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }
@@ -379,9 +420,23 @@ public class ClientGUI extends JFrame {
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                } else {
-                    User user = new User(loginPanel.getUsernameField().getText(), loginPanel.getPasswordField().getText());
-                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() );
-                    clientListener = new ClientListener(user, socket);
+                    if (getPortAndHost()){
+                        try {
+                            socket = new Socket(hostname,port);
+                            clientListener = new ClientListener(socket);
+                        } catch (IOException ioe ) {
+                            System.out.println(ioe.getMessage());
+                            // Continue to offline mode
+                        }
+                    }
+                    DocFile doc = new DocFile("NameDoc.txt", "hfsuihafi iusafhsf wuiafbsf aisbfiasbfisabf");
+                    clientListener.sendDoc(doc);
+
+//                    String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
+//                    User user = new User(loginPanel.getUsernameField().getText(), hash);
+//                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
+//                    clientListener.sendUser(user);
+
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }

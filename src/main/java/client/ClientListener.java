@@ -1,6 +1,9 @@
 package client;
 
+import resources.Document;
+import resources.DocFile;
 import resources.User;
+import spellchecker.SpellCheckManager;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,15 +16,18 @@ public class ClientListener extends Thread {
     private ObjectInputStream ois;
     private Socket mSocket;
     private User user;
+    private Document doc;
 
-    public ClientListener(User user, Socket socket) {
+    public ClientListener(Socket socket) {
+        doc = new Document(new SpellCheckManager());
         mSocket = socket;
         this.user = user;
         boolean socketReady = initializeVariables();
-        if (socketReady) {
-            login(user);
-            start();
-        }
+//        if (socketReady) {
+//            login(user);
+//            sendDoc(doc);
+//            start();
+//        }
     }
 
     private boolean initializeVariables() {
@@ -35,7 +41,7 @@ public class ClientListener extends Thread {
         return true;
     }
 
-    public void login(User user) {
+    public void sendUser(User user) {
         try {
             oos.writeObject(user);
             oos.flush();
@@ -44,11 +50,19 @@ public class ClientListener extends Thread {
         }
     }
 
+    public void sendDoc(DocFile doc) {
+        try {
+            oos.writeObject(doc);
+            oos.flush();
+        } catch (IOException ioe) {
+            System.out.println("Failed To send doc");
+        }
+    }
     public void run() {
         try {
             while (true) {
                 User user = (User)ois.readObject();
-                System.out.println(user.getUsername() + " Pass: " + user.getPassword() );
+                System.out.println(user);
             }
         } catch (ClassNotFoundException cnfe) {
             System.out.println("cnfe: " + cnfe.getMessage());

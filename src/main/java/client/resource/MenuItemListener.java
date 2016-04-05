@@ -1,4 +1,4 @@
-package client;
+package client.resource;
 
 /**
  * Created by Michael on 2/29/16.
