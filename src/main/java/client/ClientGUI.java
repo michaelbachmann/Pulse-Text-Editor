@@ -1,12 +1,8 @@
 package client;
 
-import client.Views.EditorPanel;
-import client.Views.LoginPanel;
-import client.Views.RegisterPanel;
-import client.Views.SplashPanel;
+import client.Views.*;
 import com.apple.eawt.Application;
 import resources.Document;
-import resources.DocFile;
 import resources.User;
 import resources.Verify;
 import spellchecker.SpellCheckManager;
@@ -39,17 +35,18 @@ public class ClientGUI extends JFrame {
     private CardLayout cardLayout;
     private SpellCheckManager scm;
     private ImageIcon newIcon, openIcon, saveIcon, closeIcon, copyIcon, pasteIcon, selectAllIcon, scIcon, configIcon, cutIcon, redoIcon, undoIcon;
+
     private SplashPanel splashPanel;
     private EditorPanel editorPanel;
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
     private JPanel viewController;
+
     private ClientListener clientListener;
     private Socket socket;
-
-
     private int port;
     private String hostname;
+    private boolean online;
 
     private boolean getPortAndHost()  {
         Map<String,String> settings = ConfigureSettings.getSetings(Constants.CONFIG_FILE);
@@ -67,8 +64,11 @@ public class ClientGUI extends JFrame {
         }
         return true;
     }
+
+    // Constructor
     public ClientGUI () {
         super("Pulse");
+        online = false;
         instantiateComponents();
         createGUI();
         this.setVisible(true);
@@ -81,21 +81,22 @@ public class ClientGUI extends JFrame {
     }
 
 
-    // MARK: Constructor
-    public ClientGUI (Socket socket) {
-        super("Pulse");
-        this.socket = socket;
-        instantiateComponents();
-        createGUI();
-        this.setVisible(true);
-        addActions();
-        setupOSXIcon();
-        setupFont();
-        cardLayout.show(viewController, "Splash");
-        add(viewController);
-        menuBar.setVisible(false);
-//        clientListener = new ClientListener(socket);
-    }
+//    // MARK: Constructor
+//    public ClientGUI (Socket socket) {
+//        super("Pulse");
+//        this.socket = socket;
+//        online = false;
+//        instantiateComponents();
+//        createGUI();
+//        this.setVisible(true);
+//        addActions();
+//        setupOSXIcon();
+//        setupFont();
+//        cardLayout.show(viewController, "Splash");
+//        add(viewController);
+//        menuBar.setVisible(false);
+////        clientListener = new ClientListener(socket);
+//    }
 
 
 
@@ -209,6 +210,7 @@ public class ClientGUI extends JFrame {
         viewController.add("Editor", editorPanel);
     }
 
+
     // Setup JMenuItems
     private void setUpMenuLook() {
         // Strip all the borders
@@ -251,6 +253,37 @@ public class ClientGUI extends JFrame {
 //        }
 //    };
 
+    private String saveDocument(){
+        String fileName = editorPanel.getCurrentTabName();
+        if (!online) {
+            editorPanel.saveTab();
+        } else {
+            Object [] options = {"Online", "Offline"};
+            int decision = JOptionPane.showOptionDialog(ClientGUI.this, "Where would you like to save the file?",
+                    "Save...",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, // icon
+                    options,
+                    options[0]);
+            if (decision == 0)  {  // save online selected
+                SaveDialog saveDialog = new SaveDialog(fileName);
+                // GET FROM SERVER
+                String[] list = {"FileOne.txt", "File2.txt", "XYZ.txt"};
+                Vector<String> files = new Vector<>();
+                files.addAll(Arrays.asList(list));
+                int answer = saveDialog.showYesNoMessage("Save Online...", files);
+                if (answer == 0) {
+                    // send the file to server
+                    editorPanel.setCurrentTabName(saveDialog.getFileName());
+                }
+            } else { // just save offline normally
+                editorPanel.saveTab();
+            }
+        }
+        return fileName;
+    }
+
     private void addActions() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        tabbedEditorPane.addChangeListener(tabbedChangedListener);
@@ -269,13 +302,9 @@ public class ClientGUI extends JFrame {
 
         newMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-//                setContentPane(tabbedEditorPane);
                 tabOpen(true);
                 Document newDocument = new Document(scm);
                 editorPanel.newTab("new", newDocument);
-//                tabbedEditorPane.addTab("new", newDocument);
-//                tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
-//                newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
             }
         });
         openMI.addActionListener(new ActionListener() {
@@ -290,9 +319,6 @@ public class ClientGUI extends JFrame {
                     File selectedFile = fileChooser.getSelectedFile();
                     Document newDocument = new Document(selectedFile, scm);
                     editorPanel.newTab(newDocument.getName(), newDocument);
-//                    tabbedEditorPane.addTab(newDocument.getName(), newDocument);
-//                    tabbedEditorPane.setSelectedComponent(newDocument); ////////// HMMMMMMMM
-//                    newDocument.addListener(delegate);  // Delegate: Add's our delegate to to document to manage connection between editor and document
                 }
             }
         });
@@ -304,7 +330,8 @@ public class ClientGUI extends JFrame {
         });
         saveMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ge) {
-                editorPanel.saveTab();
+                saveDocument();
+//                editorPanel.saveTab();
             }
         });
         selectAllMI.addActionListener(new ActionListener() {
@@ -374,7 +401,6 @@ public class ClientGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(viewController, "Login");
-
             }
         });
         splashPanel.getRegister().addActionListener(new ActionListener() {
@@ -393,18 +419,15 @@ public class ClientGUI extends JFrame {
                     JOptionPane.showMessageDialog(ClientGUI.this, "Password's do not match!",
                             "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    if (getPortAndHost()){
-                        try {
-                            socket = new Socket(hostname,port);
-                            clientListener = new ClientListener(socket);
-                        } catch (IOException ioe ) {
-                            System.out.println(ioe.getMessage());
-                            // Continue to offline mode
-                        }
+                    if (attemptConnection()){  // if we can connect try to register
+                        String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
+                        User user = new User(loginPanel.getUsernameField().getText(), hash, true);
+                        System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
+                        clientListener.sendUser(user);
+                    } else {
+                        JOptionPane.showMessageDialog(ClientGUI.this, "Server cannot be reached. Program in offline mode.",
+                                "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
                     }
-                    String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
-                    User user = new User(loginPanel.getUsernameField().getText(), hash);
-                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }
@@ -420,23 +443,17 @@ public class ClientGUI extends JFrame {
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                } else {
-                    if (getPortAndHost()){
-                        try {
-                            socket = new Socket(hostname,port);
-                            clientListener = new ClientListener(socket);
-                        } catch (IOException ioe ) {
-                            System.out.println(ioe.getMessage());
-                            // Continue to offline mode
-                        }
+                    if (attemptConnection()){  // if we can connect try to register
+                        String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
+                        User user = new User(loginPanel.getUsernameField().getText(), hash, false);
+                        System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
+                        clientListener.sendUser(user);
+                    } else {
+                        JOptionPane.showMessageDialog(ClientGUI.this, "Server cannot be reached. Program in offline mode.",
+                                "Sign-Up Failed", JOptionPane.WARNING_MESSAGE);
                     }
-                    DocFile doc = new DocFile("NameDoc.txt", "hfsuihafi iusafhsf wuiafbsf aisbfiasbfisabf");
-                    clientListener.sendDoc(doc);
-
-//                    String hash = Hasher.encryptPassword(loginPanel.getPasswordField().getText());
-//                    User user = new User(loginPanel.getUsernameField().getText(), hash);
-//                    System.out.println(loginPanel.getUsernameField().getText() + " " + loginPanel.getPasswordField().getText() + "Hash: " + hash);
-//                    clientListener.sendUser(user);
-
+//                    DocFile doc = new DocFile("NameDoc.txt", "hfsuihafi iusafhsf wuiafbsf aisbfiasbfisabf");
+//                    clientListener.sendDoc(doc);
                     cardLayout.show(viewController, "Editor");
                     menuBar.setVisible(true);
                 }
@@ -445,6 +462,21 @@ public class ClientGUI extends JFrame {
 
 
     }
+
+    private boolean attemptConnection() {
+        if (getPortAndHost()){
+            try {
+                socket = new Socket(hostname,port);
+                clientListener = new ClientListener(socket);
+                online = true;
+                return true;
+            } catch (IOException ioe ) {
+                System.out.println(ioe.getMessage());
+            }
+        }
+        return false; // couldn't connect continue to offline mode
+    }
+
 
     // Helper function to toggle allowable items
     public void tabOpen(boolean bool) {

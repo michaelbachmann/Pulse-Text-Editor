@@ -47,6 +47,16 @@ public class EditorPanel extends JPanel {
         add(tabbedEditorPane, BorderLayout.CENTER);
     }
 
+    public String getCurrentTabName(){
+        String toReturn = "";
+        toReturn = tabbedEditorPane.getTitleAt(tabbedEditorPane.getSelectedIndex());
+        return toReturn;
+    }
+
+    public void setCurrentTabName(String name){
+        tabbedEditorPane.setTitleAt(tabbedEditorPane.getSelectedIndex(),name);
+    }
+
     public void newTab(String title, Document document) {
         tabbedEditorPane.addTab("new", document);
         tabbedEditorPane.setSelectedComponent(document); ////////// HMMMMMMMM

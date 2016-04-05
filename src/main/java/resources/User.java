@@ -10,11 +10,13 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String directory;
+    private boolean newUser;
     private List<String> files;
 
-    public User(String username, String password) {
+    public User(String username, String password, boolean newUser) {
         this.username = username;
         this.password = password;
+        this.newUser = newUser;
         files = new Vector<>();
     }
 
