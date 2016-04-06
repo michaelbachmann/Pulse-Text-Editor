@@ -16,22 +16,11 @@ import java.awt.*;
 public class EditorPanel extends JPanel {
     private JTabbedPane tabbedEditorPane;
     private UndoManager currentManager;
-    private JMenuItem undo;
-    private JMenuItem redo;
-//    private Map<String,JMenuItem> menuItemMap;
 
-//     Manage when undo and redo are available
-//    public void updateMI(){
-//        undo.setEnabled(currentManager.canUndo());
-//        redo.setEnabled(currentManager.canRedo());
-//    }
     private SpellCheckManager scm;
 
     public EditorPanel(JMenuItem undo, JMenuItem redo) {
-        this.undo = undo;
-        this.redo = redo;
         setLayout(new BorderLayout());
-//        this.menuItemMap = menuItemMap;
         tabbedEditorPane = new JTabbedPane();
         tabbedEditorPane.setUI(new FlatButtonUI.FlatTabbedPaneUI());
         tabbedEditorPane.addChangeListener(new ChangeListener() {
