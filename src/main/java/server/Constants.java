@@ -19,4 +19,15 @@ public class Constants {
     public static final String SERVER_STARTED_STRING = "Server started on Port: ";
     public static final String SERVER_STOPPED_STRING = "Server Stopped";
 
+
+    // Databae
+    public static final String SQL_DRIVER = "com.mysql.jdbc.Driver";
+    public static final String SQL_CONNECTION = "jdbc:mysql://localhost/Pulse?user=root&password=";
+    public static final String SQL_USER_ID = "userID";
+    public static final String SQL_PASS = "password";
+    public static final String SQL_DIRECTORY_ID = "directoryID";
+    public static final String SQL_FILES = "files";
+    public static final String SQL_DIR_TABLE = "Directory";
+    public static final String SQL_USER_TABLE = "User";
+
 }
